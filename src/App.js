@@ -10,11 +10,11 @@ function App() {
       <Router>
         <Routes>
           {
-            routes.map((route)=>{
+            routes.map((route,index)=>{
               const Page=route.page
               const Layout = route.isShowHeader ? DefaultComponent : Fragment
               return (
-                <Route key={route.path} path={route.path} element={
+                <Route key={index} path={route.path} element={
                   <Layout>
                     <Page />
                   </Layout>
