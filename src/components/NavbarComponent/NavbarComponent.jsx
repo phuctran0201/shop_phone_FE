@@ -47,7 +47,7 @@ const NavbarComponent = () => {
     };
 
     return (
-        <div>
+        <div >
             <WrapperLableText>Lable</WrapperLableText>
             <WrapperContent>
                 {renderContent('text',

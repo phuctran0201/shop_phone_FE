@@ -1,6 +1,6 @@
 import React from "react";
 import mall from "../../assets/images/chinhhang.png"
-import { StyleNameProduct, WrapperCardStyle, WrapperDiscountText, WrapperPriceText, WrapperReportText } from "./style";
+import { StyleNameProduct, WrapperCardStyle, WrapperDiscountText, WrapperPriceText, WrapperReportText, WrapperStyleTextSell } from "./style";
 import {
     StarFilled
   } from '@ant-design/icons';
@@ -24,10 +24,10 @@ const CardComponent=()=>{
                <span>4,69</span> 
                 <StarFilled  style={{color:'yellow', fontSize:'12px'}} /> 
                </span>
-                <span> | Đã bán 100+</span>
+                <WrapperStyleTextSell> | Đã bán 100+</WrapperStyleTextSell>
                 
             </WrapperReportText>
-            <WrapperPriceText>32.000.000đ <WrapperDiscountText> -5%</WrapperDiscountText></WrapperPriceText>
+            <WrapperPriceText><span style={{marginRight:'5px'}}>32.000.000đ</span> <WrapperDiscountText> -5%</WrapperDiscountText></WrapperPriceText>
         </WrapperCardStyle>
         </div>
     )

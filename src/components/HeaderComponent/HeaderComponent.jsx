@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { UserOutlined } from '@ant-design/icons';
 import {
     CaretDownOutlined,
@@ -8,10 +8,21 @@ import {
 import { Col,Space,Avatar, Badge  } from 'antd';
 import { WrapperHeader,WrapperTextHeader,WrapperHeaderAccount,WrapperTextHeaderSmall } from "./style";
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
+import SignInComponent from "../SignInComponent/SignInComponent";
 
 const HeaderComponent=()=>{
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const showModal = () => {
+      setIsModalOpen(true);
+    };
+    const handleOk = () => {
+      setIsModalOpen(false);  
+    };
+    const handleCancel = () => {
+      setIsModalOpen(false);
+    };
     return(
-        <div>
+        <div >
            <WrapperHeader>
                 <Col span={6}><WrapperTextHeader>TranHuuPhucShop</WrapperTextHeader></Col>
                 <Col span={12} >
@@ -23,17 +34,17 @@ const HeaderComponent=()=>{
                      enterButton />
    
                 </Col>
-                <Col span={6} style={{display:'flex',gap:'20px',padding:'0 10px'}}>
+                <Col span={6} style={{display:'flex',gap:'54px',padding:'0 10px'}}>
                     <WrapperHeaderAccount>
                         <div>
                         <Space wrap size={16}>
                             <Avatar size="large" icon={<UserOutlined />} />
                         </Space>
                         </div>
-                        <div >
+                        <div style={{cursor:'pointer'}}>
                             <WrapperTextHeaderSmall>Đăng kí/Đăng nhập</WrapperTextHeaderSmall>
-                            <div>
-                            <WrapperTextHeaderSmall>Tài khoản  </WrapperTextHeaderSmall>
+                            <div onClick={showModal}>
+                            <WrapperTextHeaderSmall  >Tài khoản </WrapperTextHeaderSmall>
                             <CaretDownOutlined />
                             </div>
                             
@@ -47,6 +58,7 @@ const HeaderComponent=()=>{
                 </div>
                 </Col>
              </WrapperHeader>
+             <SignInComponent visible={isModalOpen} onCancel={handleCancel}></SignInComponent>
         </div>
     )
 }
