@@ -35,6 +35,10 @@ width:210px;
 }
 position:relative;
 
+.ant-card-cover{
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+}
 `
 export const WrapperStyleTextSell=styled.span`
 font-size:15px;

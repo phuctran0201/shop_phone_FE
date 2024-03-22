@@ -9,15 +9,15 @@ const CardComponent=()=>{
     return(
         <div>
         <WrapperCardStyle
-        
-            hoverable
-            bodyStyle={{padding:'10px'}}
-            style={{
-            width: 240,
-            }}
+        bodyStyle={{padding:'10px'}}
+        hoverable
+        style={{
+            width: "240px"
+           
+        }}
             cover={<img alt="example" src="https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/Products/Images/42/305658/iphone-15-pro-max-blue-thumbnew-600x600.jpg" />}
         >
-            <img src={mall} style={{width:'68px', height:'14px',position:'absolute',top:'-1px',left:'-1px',borderTopRightRadius:'3px'}}/>
+            <img src={mall} alt=""style={{width:'68px', height:'14px',position:'absolute',top:'-1px',left:'-1px',borderTopRightRadius:'3px'}}/>
             <StyleNameProduct>Iphone 15 promax</StyleNameProduct>
             <WrapperReportText>
                <span style={{marginRight:'4px'}}>

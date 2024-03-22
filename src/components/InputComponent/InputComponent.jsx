@@ -1,11 +1,13 @@
 import React from "react";
 import { Input } from 'antd';
-const InputComponent=({size,placeholder,style,...rests})=>{
+const InputComponent=(props)=>{
+    const { placeholder = 'Nhập text', ...rests } = props
+    const handleOnchangeInput = (e) => {
+        props.onChange(e.target.value)
+      
+    }
     return(
-        <Input size={size} 
-            placeholder={placeholder} 
-            style={style}
-            {...rests}
+        <Input placeholder={placeholder} value={props.value} {...rests} onChange={handleOnchangeInput}
         />
     )
 }

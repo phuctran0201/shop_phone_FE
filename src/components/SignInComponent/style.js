@@ -1,5 +1,6 @@
 import { Input, Modal } from "antd";
 import styled from "styled-components";
+import InputComponent from "../InputComponent/InputComponent";
 
 export const WrapperModalSignIn=styled(Modal)`
 width: 840px !important;
@@ -55,7 +56,7 @@ export const WrapperSiginInput=styled.div`
     border-bottom: 2px solid white;
     color:rgb(36, 36, 36);
 `
-export const WrapperSiginInputItem=styled(Input)`
+export const WrapperSiginInputItem=styled(InputComponent)`
     width: 100%;
     height: 100%;
     background: none;
@@ -70,4 +71,5 @@ position: absolute;
  right: 12px;
 top:15px;
 color:black;
+cursor:pointer;
 `

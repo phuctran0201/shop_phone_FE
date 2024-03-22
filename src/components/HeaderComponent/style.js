@@ -25,3 +25,12 @@ font-size:12px;
 color:#fff;
 white-space:nowrap
 `
+export const WrapperTextPopup=styled.p`
+cursor:pointer;
+margin:0;
+padding:10px;
+&:hover{
+    background:#A9A9A9;
+    color:#343a40;
+}
+`
