@@ -15,13 +15,16 @@ import { isJsonString } from "../../Ultis";
 import { jwtDecode } from "jwt-decode";
 import { resetUser } from "../../redux/slices/userSlide";
 import LoadingComponent from "../LoadingComponent/LoadingComponent"
+import { useNavigate } from "react-router";
 
 const HeaderComponent=()=>{
-
+    const navigate=useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const user=useSelector((state)=>state.user)
     const dispatch=useDispatch();
     const [isLoading, setIsLoading] = useState(false);
+    const [username, setUsername] = useState("");
+    const [avatar, setAvatar] = useState("");
     const showModal = () => {
       setIsModalOpen(true);
     };
@@ -32,6 +35,11 @@ const HeaderComponent=()=>{
       setIsModalOpen(false);
     };
 
+    useEffect(() => {
+      setUsername(user?.name); 
+      setAvatar(user?.avatar)
+    }, [user?.name,user?.avatar]);
+    
     useEffect(() => {//loading
       let timer;
       if (isLoading) {
@@ -52,10 +60,12 @@ const HeaderComponent=()=>{
         storageData = JSON.parse(storageData);
         decoded = jwtDecode(storageData);
         if(decoded?.id){
+          setIsLoading(true)
           await UserService.logOutUser(storageData);
           localStorage.clear();
           dispatch(resetUser());
           setIsLoading(true);
+          navigate("/")
         }
       }
     }
@@ -63,7 +73,11 @@ const HeaderComponent=()=>{
     const content = (
       <div>
         <WrapperTextPopup onClick={handleLogOut}>Đăng xuất</WrapperTextPopup>
-        <WrapperTextPopup>Thông tin người dùng</WrapperTextPopup>
+        <WrapperTextPopup onClick={() =>navigate("/profile")}>Thông tin người dùng</WrapperTextPopup>
+        {user.userAuth==='ADMIN' && (
+          <WrapperTextPopup onClick={() =>navigate("/admin")}>Quản lý hệ thống</WrapperTextPopup>
+        )}
+        
       </div>
     );
     return(
@@ -84,13 +98,18 @@ const HeaderComponent=()=>{
                     <WrapperHeaderAccount>
                         <div>
                         <Space wrap size={16}>
-                            <Avatar size="large" icon={<UserOutlined />} />
+                          {avatar?(
+                              <Avatar size="large" src={avatar} alt="avatar"/>
+                          ):
+                          <Avatar size="large" icon={<UserOutlined />} />
+                          }
+                            
                         </Space>
                         </div>
                         {user?.name?(
                           <>
                            <Popover content={content}  trigger="click">
-                           <div style={{cursor:'pointer'}}>{user.name}</div>
+                           <div style={{cursor:'pointer'}}>{username}</div>
                           </Popover>
                           </>
                        

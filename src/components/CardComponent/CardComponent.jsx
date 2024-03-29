@@ -5,7 +5,8 @@ import {
     StarFilled
   } from '@ant-design/icons';
 
-const CardComponent=()=>{
+const CardComponent=(props)=>{
+    const {countInStock,description,image,name,price,rating,type,discount,sold}=props
     return(
         <div>
         <WrapperCardStyle
@@ -18,16 +19,16 @@ const CardComponent=()=>{
             cover={<img alt="example" src="https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/Products/Images/42/305658/iphone-15-pro-max-blue-thumbnew-600x600.jpg" />}
         >
             <img src={mall} alt=""style={{width:'68px', height:'14px',position:'absolute',top:'-1px',left:'-1px',borderTopRightRadius:'3px'}}/>
-            <StyleNameProduct>Iphone 15 promax</StyleNameProduct>
+            <StyleNameProduct>{name}</StyleNameProduct>
             <WrapperReportText>
                <span style={{marginRight:'4px'}}>
-               <span>4,69</span> 
+               <span>{rating}</span> 
                 <StarFilled  style={{color:'yellow', fontSize:'12px'}} /> 
                </span>
-                <WrapperStyleTextSell> | Đã bán 100+</WrapperStyleTextSell>
+                <WrapperStyleTextSell> | Đã bán {sold}+</WrapperStyleTextSell>
                 
             </WrapperReportText>
-            <WrapperPriceText><span style={{marginRight:'5px'}}>32.000.000đ</span> <WrapperDiscountText> -5%</WrapperDiscountText></WrapperPriceText>
+            <WrapperPriceText><span style={{marginRight:'5px'}}>{price}<sup>₫</sup></span> <WrapperDiscountText> -{discount}%</WrapperDiscountText></WrapperPriceText>
         </WrapperCardStyle>
         </div>
     )

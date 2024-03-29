@@ -42,3 +42,18 @@ export const logOutUser= async (accessToken)=>{
     })
     return res.data;
     }
+
+    export const updateUser= async (accessToken,data)=>{
+        const res = await axiosJWT.put(
+            `${process.env.REACT_APP_API_URL}/users`,
+            data, 
+            {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+        return res.data;
+        }

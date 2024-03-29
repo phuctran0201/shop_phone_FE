@@ -22,7 +22,7 @@ const SignInComponent = ({ visible, onCancel }) => {
 
     const mutation = useMutationHooks(data => UserService.loginUser(data));
     const {  data,isError,isSuccess } = mutation;
-
+    
     useEffect(()=>{     //message
         if(data?.statusCode === 'OK'){
             message.success();
@@ -42,7 +42,6 @@ const SignInComponent = ({ visible, onCancel }) => {
     
     const handleGetDetailsUser=async (id,token)=>{
         const res=await UserService.getDetailsUser(id,token);
-        console.log(res);
         dispatch(updateUser({ ...res?.body,accessToken:token}))
     
     }
