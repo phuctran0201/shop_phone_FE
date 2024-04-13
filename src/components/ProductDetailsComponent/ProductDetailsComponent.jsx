@@ -1,23 +1,101 @@
 import { Col, Image, InputNumber, Rate, Row } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import imgProductBig from "../../assets/images/imgBig.png.webp"
 import imgProductSmall from "../../assets/images/imgsmall.webp"
 import { WrapperAddressProduct, WrapperBtnQualityProduct, WrapperInputNumber, WrapperPriceProduct, WrapperPriceTextProduct, WrapperQualityProduct, WrapperStyleColImg, WrapperStyleImgSmall, WrapperStyleNameProduct, WrapperStyleTextSell } from "./style";
-
+import * as ProductService from "../../service/ProductService";
+import * as message from "../../components/Message/Message";
 import {
     PlusOutlined,
     MinusOutlined
   } from '@ant-design/icons';
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
-  const onChange = (value) => {
-    console.log('changed', value);
-  };
-const ProductDetailsComponent=()=>{
+import { useQuery } from "@tanstack/react-query";
+import { useDispatch, useSelector } from "react-redux";
+import {  useNavigate } from "react-router";
+import SignInComponent from "../SignInComponent/SignInComponent";
+import { addOrderProduct, resetOrder } from "../../redux/slices/orderSlide";
+import { convertPrice } from "../../Ultis";
+  
+const ProductDetailsComponent=({idProduct})=>{
+    const navigate=useNavigate();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const order = useSelector((state) => state.order)
+    const [errorLimitOrder,setErrorLimitOrder] = useState(false)
+   const [numProduct,setNumProduct]=useState(1);
+   const user = useSelector((state) => state.user);
+   const dispatch=useDispatch();
+
+    const onChange = (value) => {
+        setNumProduct(Number(value))
+      };
+      const handleCancel = () => {
+        setIsModalOpen(false);
+      };
+    const fetchGetDetailsProduct= async ()=>{
+        const res=await ProductService.getDetailsProduct(idProduct);
+        return res?.body;
+      
+    }
+
+    const { data: productDetails } = useQuery({
+        queryKey: ['product-details',idProduct],
+        queryFn: fetchGetDetailsProduct,
+        enabled: !!idProduct
+        // retry: 3,
+        // retryDelay: 100000000000
+      });
+      
+
+      const handleChangeNumProduct=(type,limited)=>{
+        if(type === 'increase') {
+            if(!limited) {
+                setNumProduct(numProduct + 1)
+            }
+        }else {
+            if(!limited) {
+                setNumProduct(numProduct - 1)
+            }
+        }
+      }
+    
+      const handleAddOrderProduct=()=>{
+        if(!user?.id){
+            setIsModalOpen(true);
+        }else{
+            const orderRedux = order?.orderItems?.find((item) => item.product === productDetails?.id)
+            if((orderRedux?.amount + numProduct) <= orderRedux?.countInstock || (!orderRedux && productDetails?.countInStock > 0)) {
+                message.success('Đã thêm vào giỏ hàng')
+                dispatch(addOrderProduct({
+                    orderItem: {
+                        name: productDetails?.name,
+                        amount: numProduct,
+                        image: productDetails?.image,
+                        price: productDetails?.price,
+                        product: productDetails?.id,
+                        discount: productDetails?.discount,
+                        countInstock: productDetails?.countInStock
+                    }
+                }))
+            } else {
+                setErrorLimitOrder(true)
+            }
+        }
+      }
+      
+      useEffect(() => {
+        const orderRedux = order?.orderItems?.find((item) => item?.product === productDetails?.id) 
+        if((orderRedux?.amount + numProduct) <= orderRedux?.countInstock || (!orderRedux && productDetails?.countInStock > 0)) {
+            setErrorLimitOrder(false)
+        } else if(productDetails?.countInStock === 0){
+            setErrorLimitOrder(true)
+        }
+    },[numProduct])
     return(
         <div>
             <Row  style={{padding:'16px', background:'#fff'}} >
             <Col span={10} style={{borderRight:'1px solid #e5e5e5', paddingRight:'8px'}}>
-                <Image src={imgProductBig} alt="Image Product" preview={false}/>
+                <Image src={productDetails?.image} alt="Image Product" preview={false}/>
                 <Row style={{ paddingTop:"10px",justifyContent:'space-between'}}>
                     <WrapperStyleColImg span={4}>
                     <WrapperStyleImgSmall src={imgProductSmall} alt="Image Product Small"preview={false}/>
@@ -41,21 +119,21 @@ const ProductDetailsComponent=()=>{
                 </Row>
             </Col>
             <Col span={14} style={{ padding:'0 10px '}}>
-                <WrapperStyleNameProduct>Apple iPhone 15 Pro Max</WrapperStyleNameProduct>
+                <WrapperStyleNameProduct>{productDetails?.name}</WrapperStyleNameProduct>
                 <div>
-                <Rate disabled defaultValue={5} />
+                <Rate allowHalf disabled defaultValue={productDetails?.rating} value={productDetails?.rating} />
                 <WrapperStyleTextSell> (140)</WrapperStyleTextSell>
-                <WrapperStyleTextSell> | Đã bán 100+</WrapperStyleTextSell>
+                <WrapperStyleTextSell> | Đã bán {productDetails?.sold}+</WrapperStyleTextSell>
                 </div>
                 <WrapperPriceProduct>
                     <WrapperPriceTextProduct>
-                    30.990.000<sup>₫</sup>
+                    {convertPrice(productDetails?.price)}<sup>₫</sup>
                     </WrapperPriceTextProduct>
                 </WrapperPriceProduct>  
                 <div style={{fontWeight:'600',fontSize:'16px',lineHeight:'150%'}}>Thông tin vận chuyển</div>
                 <WrapperAddressProduct style={{display: 'flex', alignItems: 'center'}}>
                     <span>Giao đến: </span>
-                    <span className="address" > Phường Hàng Trống, Quận Hoàn Kiếm, Hà Nội</span>
+                    <span className="address" style={{color:"#4682B4"}}>{user?.address}</span>
                 
                     <span className="changeAddress" >Đổi</span>
                 </WrapperAddressProduct>
@@ -64,23 +142,24 @@ const ProductDetailsComponent=()=>{
                     <div>Số lượng</div>
                     <WrapperQualityProduct>
                     <WrapperBtnQualityProduct>
-                    <MinusOutlined style={{fontSize:'20px'}} />
+                    <MinusOutlined style={{fontSize:'20px'}} onClick={()=>handleChangeNumProduct("decrease",numProduct === 1)}/>
                     </WrapperBtnQualityProduct>
                     
-                    <WrapperInputNumber min={1} max={10} defaultValue={1} onChange={onChange} size="default" style={{width:'40px',paddingLeft:'4px'}} />
+                    <WrapperInputNumber min={1} max={10}  value={numProduct} onChange={onChange} size="default" style={{width:'40px'}} />
                     <WrapperBtnQualityProduct>
-                    <PlusOutlined style={{fontSize:'20px'}}/>
+                    <PlusOutlined style={{fontSize:'20px'}} onClick={()=>handleChangeNumProduct("increase", numProduct === productDetails?.countInStock)}/>
                     </WrapperBtnQualityProduct>
                     
                     </WrapperQualityProduct>
                 </div>
                 <div style={{display:'flex',alignItems:'center',gap:'6px', margin:'20px 0'}}>
-                    <ButtonComponent size='large' textButton="Chọn mua" style={{
+                    <ButtonComponent onClick={handleAddOrderProduct} size='large' textButton="Chọn mua" style={{
                         background:'rgb(255, 66, 78)',
                         color:'#fff',width:'220px',
                         fontWeight:'700'}}>
-
+                        
                     </ButtonComponent>
+                    
                     <ButtonComponent size='large' textButton="Mua trả góp - trả sau" style={{
                         background:'rgb(255, 255, 255)',
                         color:'rgb(10, 104, 255)',
@@ -89,9 +168,15 @@ const ProductDetailsComponent=()=>{
                         fontWeight:'700'}}>
 
                     </ButtonComponent>
+                    
                 </div>
+                {errorLimitOrder && <div style={{color: 'red'}}>Sản phẩm đã hết hàng</div>}
             </Col>
             </Row>
+            <div>
+       
+        {isModalOpen && <SignInComponent visible={isModalOpen} onCancel={handleCancel} />}
+    </div>
         </div>
     )
 }

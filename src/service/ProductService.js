@@ -2,10 +2,21 @@ import axios from "axios";
 import { axiosJWT } from "./UserSevice";
 
 
-export const getAllProduct= async ()=>{
-    const res= await axios.get(`${process.env.REACT_APP_API_URL}/products`)
-    return res.data;
+export const getAllProduct = async (search, limit) => {
+    try {
+        let res = {};
+        if (search?.length > 0) {
+            res = await axios.get(`${process.env.REACT_APP_API_URL}/products?name=${search}&size=${limit}`);
+        } else {
+            res = await axios.get(`${process.env.REACT_APP_API_URL}/products?size=${limit}`);
+        }
+        return res.data;
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        throw error;
     }
+};
+
 export const createProduct= async (data,accessToken)=>{
     const res= await axiosJWT.post(`${process.env.REACT_APP_API_URL}/products`,data
     , 
@@ -19,8 +30,14 @@ export const createProduct= async (data,accessToken)=>{
     );
     return res.data;
     }
+
 export const getDetailsProduct= async (id)=>{
     const res= await axios.get(`${process.env.REACT_APP_API_URL}/products/detail/${id}`)
+    return res.data;
+    }
+
+export const getProductByType= async (type,page,limit)=>{
+    const res= await axios.get(`${process.env.REACT_APP_API_URL}/products?type=${type}&page=${page}&size=${limit}`)
     return res.data;
     }
 
@@ -63,3 +80,8 @@ export const deleteManyProduct= async (accessToken,data)=>{
     );
     return res.data;
     }
+export const getAllTypesProduct= async ()=>{
+    const res= await axios.get(`${process.env.REACT_APP_API_URL}/products/getTypeProduct`)
+    return res.data;
+    }
+    

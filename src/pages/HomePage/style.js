@@ -11,7 +11,7 @@ height:44px;
 export const WrapperButtonMore = styled(ButtonComponent)`
     &:hover {
         color: #fff !important;
-        background: #ff4d4f !important; 
+        background: ${(props) => props.disabled ? '#ccc !important' : '#ff4d4f !important'}; 
         
         span {
             color: #fff; 

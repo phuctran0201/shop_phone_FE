@@ -1,5 +1,6 @@
 import { Input, Upload } from "antd";
 import styled from "styled-components";
+import InputComponent from "../../components/InputComponent/InputComponent";
 
 export const WrapperHeader=styled.div`
 color:#000;
@@ -24,7 +25,7 @@ font-weight: 600;
 padding :0 10px;
 width:80px;
 `
-export const WrapperInputProfile=styled(Input)`
+export const WrapperInputProfile=styled(InputComponent)`
 width:400px;
 `
 export const WrapperInput=styled.div`

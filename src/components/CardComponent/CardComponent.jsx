@@ -4,19 +4,28 @@ import { StyleNameProduct, WrapperCardStyle, WrapperDiscountText, WrapperPriceTe
 import {
     StarFilled
   } from '@ant-design/icons';
+import { useNavigate } from "react-router";
+import { convertPrice } from "../../Ultis";
+
+
 
 const CardComponent=(props)=>{
-    const {countInStock,description,image,name,price,rating,type,discount,sold}=props
+    const navigate=useNavigate();
+    const {countInStock,description,image,name,price,rating,type,discount,sold,id}=props
+    const handleDetailsProduct=(id)=>{
+        navigate(`/product-details/${id}`)
+    }
     return(
         <div>
         <WrapperCardStyle
-        bodyStyle={{padding:'10px'}}
         hoverable
+        disabled={countInStock===0}
         style={{
-            width: "240px"
-           
+            width: "240px",
+          
         }}
-            cover={<img alt="example" src="https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/Products/Images/42/305658/iphone-15-pro-max-blue-thumbnew-600x600.jpg" />}
+            cover={<img alt="example" src={image}/>}
+            onClick={()=>handleDetailsProduct(id)}
         >
             <img src={mall} alt=""style={{width:'68px', height:'14px',position:'absolute',top:'-1px',left:'-1px',borderTopRightRadius:'3px'}}/>
             <StyleNameProduct>{name}</StyleNameProduct>
@@ -28,7 +37,7 @@ const CardComponent=(props)=>{
                 <WrapperStyleTextSell> | Đã bán {sold}+</WrapperStyleTextSell>
                 
             </WrapperReportText>
-            <WrapperPriceText><span style={{marginRight:'5px'}}>{price}<sup>₫</sup></span> <WrapperDiscountText> -{discount}%</WrapperDiscountText></WrapperPriceText>
+            <WrapperPriceText><span style={{marginRight:'5px'}}>{convertPrice(price)}<sup>₫</sup></span> <WrapperDiscountText> -{discount}%</WrapperDiscountText></WrapperPriceText>
         </WrapperCardStyle>
         </div>
     )

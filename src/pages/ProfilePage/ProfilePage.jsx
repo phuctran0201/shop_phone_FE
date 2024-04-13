@@ -31,38 +31,44 @@ const ProfilePage=()=>{
             }
         }
     );
-    
+   
+    useEffect(() => {
+    let storageData = localStorage.getItem('accessToken');
+    if (storageData && isJsonString(storageData)) {
+        storageData = JSON.parse(storageData);
+        const decoded = jwtDecode(storageData);
+        const id = decoded?.id;
+        handleGetDetailsUser(id, storageData);
+    }
+}, []);
 
-    
 const handleGetDetailsUser=async (id,token)=>{
     const res=await UserService.getDetailsUser(id,token);
     dispatch(updateUser({ ...res?.body,accessToken:token}))
 }
+console.log(user);
     useEffect(() => {
         setEmail(user?.email);
         setName(user?.name);
         setPhone(user?.phone);
         setAddress(user?.address);
         setAvatar(user?.avatar);
+        
     }, [user]);
 
-    const handleOnchangeEmail = (event) => {
-        const { value } = event.target;
+    const handleOnchangeEmail = (value) => {
         setEmail(value);
     }
 
-    const handleOnchangeName = (event) => {
-        const { value } = event.target;
+    const handleOnchangeName = (value) => {    
         setName(value);
     }
 
-    const handleOnchangePhone = (event) => {
-        const { value } = event.target;
+    const handleOnchangePhone = (value) => {
         setPhone(value);
     }
 
-    const handleOnchangeAddress = (event) => {
-        const { value } = event.target;
+    const handleOnchangeAddress = (value) => {
         setAddress(value);
     }
 
@@ -81,14 +87,16 @@ const handleGetDetailsUser=async (id,token)=>{
             if (storageData && isJsonString(storageData)) {
                 storageData = JSON.parse(storageData);
                 decoded = jwtDecode(storageData);
-                console.log(storageData);
             const id = decoded?.id;
+            console.log(id);
+            handleGetDetailsUser(id,storageData);
             if (decoded?.id) {
                 try {
                     const response = await mutation.mutateAsync({ id, email, name, phone, address, avatar, accessToken: storageData });
                     if (response.body.status === "OK") {
                         message.success();
-                        handleGetDetailsUser(id,storageData);
+                        dispatch(updateUser({ email, name, phone, address, avatar}))
+                       
                     } else if (response.body.status === "ERR") {
                         message.error();
                     }

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { WrapperHeader, WrapperUploadFile } from "./style";
-import { Button, Form, Space } from "antd";
+import { Button, Divider, Form, Input, Select, Space } from "antd";
 import TableComponent from "../TableComponent/TableComponent";
 import * as ProductService from "../../service/ProductService";
 import * as UserService from "../../service/UserSevice";
@@ -18,7 +18,7 @@ import ModalComponent from "../ModalComponent/ModalComponent";
 
 
 
-
+let index = 0;
 const AdminProduct =()=>{
     const initialState = {
         name: '',
@@ -42,9 +42,33 @@ const AdminProduct =()=>{
     const [form] = Form.useForm();
     const [formDrawer] = Form.useForm();
     const [searchText, setSearchText] = useState('');
-     const [searchedColumn, setSearchedColumn] = useState('');
-     const searchInput = useRef(null);
-   
+    const [searchedColumn, setSearchedColumn] = useState('');
+    const searchInput = useRef(null);
+    const [items, setItems] = useState([]);
+    const [name, setName] = useState('');
+    const inputRef = useRef(null);
+    
+    const fetchAllTypeProduct=async ()=>{
+      const res=await ProductService.getAllTypesProduct();
+      if (res?.statusCode==="OK") {
+        setItems(res?.body);
+        
+      }
+     return res;
+    }
+    const queryTypeProduct = useQuery({ queryKey: ['productType'], queryFn: fetchAllTypeProduct })
+    
+    const addItem = (e) => {
+      e.preventDefault();
+      setItems([...items, name || `New item ${index++}`]);
+      setName('');
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 0);
+    };
+     const onNameChange = (event) => {
+    setName(event.target.value);
+  };
 
     const mutation = useMutationHooks(
         async (data) => {
@@ -330,7 +354,6 @@ const AdminProduct =()=>{
       }, [formDrawer, stateProductDetails, isModalOpen])
       
     const handleDetailsProduct=()=>{
-       console.log(rowSelected);
         setIsOpenDrawer(true);
       }
     const renderAction=()=>{
@@ -564,7 +587,42 @@ const AdminProduct =()=>{
                         },
                     ]}
                     >
-                    <InputComponent  value={stateProduct.type} onChange={(e) => handleInputChange(e, 'type')} />
+                    {/* <InputComponent  value={stateProduct.type} onChange={(e) => handleInputChange(e, 'type')} /> */}
+                    <Select
+                   
+                    onChange={(e) => handleInputChange(e, 'type')}
+                    placeholder="nhập text"
+                    dropdownRender={(menu) => (
+                      <>
+                        {menu}
+                        <Divider
+                          style={{
+                            margin: '8px 0',
+                          }}
+                        />
+                        <Space
+                          style={{
+                            padding: '0 8px 4px',
+                          }}
+                        >
+                          <Input
+                            placeholder="Please enter item"
+                            ref={inputRef}
+                            value={name}
+                            onChange={onNameChange}
+                            onKeyDown={(e) => e.stopPropagation()}
+                          />
+                          <Button type="text" icon={<PlusOutlined />} onClick={addItem}>
+                            Add item
+                          </Button>
+                        </Space>
+                      </>
+                    )}
+                    options={items.map((item) => ({
+                      label: item,
+                      value: item,
+                    }))}
+                  />
                     </Form.Item>
                     <Form.Item
                     label="price"
@@ -722,7 +780,15 @@ const AdminProduct =()=>{
                         },
                     ]}
                     >
-                    <InputComponent  value={stateProductDetails.type} onChange={(e) => handleInputChangeDetails(e, 'type')} />
+                    {/* <InputComponent  value={stateProductDetails.type} onChange={(e) => handleInputChangeDetails(e, 'type')} /> */}
+                    <Select
+                       
+                        onChange={(e) => handleInputChangeDetails(e, 'type')}
+                        options={items.map((item) => ({
+                          label: item,
+                          value: item,
+                        }))}
+                      />
                     </Form.Item>
                     <Form.Item
                     label="price"

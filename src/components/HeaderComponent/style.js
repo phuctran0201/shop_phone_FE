@@ -12,6 +12,7 @@ font-size:18px;
 color:#fff;
 font-weight:bold;
 text-align:left;
+
 `
 export const WrapperHeaderAccount=styled.div`
 display:flex;
@@ -23,7 +24,8 @@ gap:10px;
 export const WrapperTextHeaderSmall=styled.span`
 font-size:12px;
 color:#fff;
-white-space:nowrap
+white-space:nowrap;
+padding:0 10px !important;
 `
 export const WrapperTextPopup=styled.p`
 cursor:pointer;
@@ -33,4 +35,10 @@ padding:10px;
     background:#A9A9A9;
     color:#343a40;
 }
+`
+export const WrapperContentPopup = styled.p`
+    cursor: pointer;
+    &:hover {
+        color: rgb(26, 148, 255);
+    }
 `

@@ -18,13 +18,13 @@ export const userSlide = createSlice({
     initialState,
     reducers: {
         updateUser: (state, action) => {
-            const { name = '', email = '', accessToken = '', address = '', phone = '', avatar = '', _id = '',city= '',refreshToken = '',userAuth='' } = action.payload
+            const { name = '', email = '', accessToken = '', address = '', phone = '', avatar = '', id = '',city= '',refreshToken = '',userAuth='' } = action.payload
             state.name = name ? name : state.name;
             state.email = email ? email : state.email;
             state.address = address ? address : state.address;
             state.phone = phone ? phone : state.phone;
             state.avatar = avatar ? avatar : state.avatar;
-            state.id = _id ? _id : state.id
+            state.id = id ? id : state.id
             state.accessToken = accessToken ? accessToken : state.accessToken;
             state.city = city ? city : state.city;
             state.refreshToken = refreshToken ? refreshToken : state.refreshToken;

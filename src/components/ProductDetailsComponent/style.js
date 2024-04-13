@@ -11,7 +11,7 @@ flex-basis:unset;
 display:flex;
 `
 export const WrapperStyleNameProduct=styled.h1`
-   
+    
     color: rgb(39, 39, 42);
     font-size: 20px;
     font-weight: 500;

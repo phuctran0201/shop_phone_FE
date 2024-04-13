@@ -16,6 +16,8 @@ import { useQuery } from "@tanstack/react-query";
 import * as ProductService from "../../service/ProductService";
 import * as UserService from "../../service/UserSevice";
 import { useMutationHooks } from "../../hooks/useMutationHooks";
+import { useDispatch, useSelector } from "react-redux";
+import { updateUser } from "../../redux/slices/userSlide";
 const AdminUser =()=>{
     const initialState = {
         name: '',
@@ -40,7 +42,7 @@ const AdminUser =()=>{
     const [searchText, setSearchText] = useState('');
      const [searchedColumn, setSearchedColumn] = useState('');
      const searchInput = useRef(null);
-   
+     const dispatch = useDispatch();
 
     const mutation = useMutationHooks(
         async (data) => {
@@ -246,12 +248,12 @@ const AdminUser =()=>{
                   });
                 if(response.statusCode==="OK"){
                     message.success();
+                    dispatch(updateUser({stateUserDetails}));
                     handleCloseDrawer();
                 }
                 else{
                     message.error(response.body.message)
                 }
-               
             } else {
                 console.error("Access token not found or invalid.");
             }
@@ -494,6 +496,7 @@ const AdminUser =()=>{
       const handleChangeDetails = (value) => {
         setStateUserDetails({ ...stateUserDetails, userAuth:value });
       };
+      
     return(
         <div>
            <WrapperHeader>Quản lý người dùng</WrapperHeader>
@@ -722,7 +725,7 @@ const AdminUser =()=>{
                     name="password"
                     rules={[
                         {
-                        required: true,
+                        required: false,
                         message: 'Please input password!',
                         },
                     ]}
@@ -806,7 +809,7 @@ const AdminUser =()=>{
                     style={{
                     width: 120,
                     }}
-                    onChange={handleChangeDetails}
+                    onChange={(e) => handleInputChangeDetails(e, 'userAuth')}
                     options={[
                     {
                         value: 'ADMIN',

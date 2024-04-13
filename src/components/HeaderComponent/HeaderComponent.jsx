@@ -6,7 +6,7 @@ import {
   } from '@ant-design/icons';
 
 import { Col,Space,Avatar, Badge, Popover  } from 'antd';
-import { WrapperHeader,WrapperTextHeader,WrapperHeaderAccount,WrapperTextHeaderSmall, WrapperTextPopup } from "./style";
+import { WrapperHeader,WrapperTextHeader,WrapperHeaderAccount,WrapperTextHeaderSmall, WrapperTextPopup, WrapperContentPopup } from "./style";
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
 import SignInComponent from "../SignInComponent/SignInComponent";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,14 +16,18 @@ import { jwtDecode } from "jwt-decode";
 import { resetUser } from "../../redux/slices/userSlide";
 import LoadingComponent from "../LoadingComponent/LoadingComponent"
 import { useNavigate } from "react-router";
+import { resetSearch, searchProduct } from "../../redux/slices/productSlide";
 
 const HeaderComponent=()=>{
     const navigate=useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const user=useSelector((state)=>state.user)
+    const user=useSelector((state)=>state.user);
+    const order=useSelector((state)=>state.order)
     const dispatch=useDispatch();
     const [isLoading, setIsLoading] = useState(false);
-    const [username, setUsername] = useState("");
+    const [isOpenPopup, setIsOpenPopup] = useState(false)
+    const [search,setSearch]=useState("");
+    const [userName, setUserName] = useState('')
     const [avatar, setAvatar] = useState("");
     const showModal = () => {
       setIsModalOpen(true);
@@ -36,7 +40,7 @@ const HeaderComponent=()=>{
     };
 
     useEffect(() => {
-      setUsername(user?.name); 
+      setUserName(user?.name) 
       setAvatar(user?.avatar)
     }, [user?.name,user?.avatar]);
     
@@ -69,29 +73,56 @@ const HeaderComponent=()=>{
         }
       }
     }
-    
+    console.log(user);
+   
     const content = (
       <div>
-        <WrapperTextPopup onClick={handleLogOut}>Đăng xuất</WrapperTextPopup>
-        <WrapperTextPopup onClick={() =>navigate("/profile")}>Thông tin người dùng</WrapperTextPopup>
-        {user.userAuth==='ADMIN' && (
-          <WrapperTextPopup onClick={() =>navigate("/admin")}>Quản lý hệ thống</WrapperTextPopup>
+        <WrapperContentPopup onClick={() => handleClickNavigate('profile')}>Thông tin người dùng</WrapperContentPopup>
+        {user?.userAuth==="ADMIN" && (
+          <WrapperContentPopup onClick={() => handleClickNavigate('admin')}>Quản lí hệ thống</WrapperContentPopup>
         )}
-        
+        <WrapperContentPopup onClick={() => handleClickNavigate(`my-order`)}>Đơn hàng của tôi</WrapperContentPopup>
+        <WrapperContentPopup onClick={() => handleClickNavigate()}>Đăng xuất</WrapperContentPopup>
       </div>
     );
+    const handleClickNavigate = (type) => {
+      if(type === 'profile') {
+        navigate('/profile')
+      }else if(type === 'admin') {
+        navigate('/admin')
+      }else if(type === 'my-order') {
+        navigate('/my-order',{ state : {
+            id: user?.id   
+          }
+        })
+      }else {
+        handleLogOut()
+      }
+      setIsOpenPopup(false)
+    }
+  const onSearch=(e)=>{
+    setSearch(e);
+    dispatch(searchProduct(search));
+    
+  }
+  const handleNavigateToHomePage = () => {
+    setSearch("");
+    dispatch(resetSearch());
+    navigate('/');
+    setIsLoading(true)
+  };
     return(
         <div >
           <LoadingComponent   isLoading={isLoading}>
            <WrapperHeader>
-                <Col span={6}><WrapperTextHeader>TranHuuPhucShop</WrapperTextHeader></Col>
+                <Col span={6}><WrapperTextHeader onClick={handleNavigateToHomePage} style={{cursor:'pointer'}}>TranHuuPhucShop</WrapperTextHeader></Col>
                 <Col span={12} >
                     <ButtonInputSearch
                     size="large" 
                     textButton="Tìm kiếm"
                     placeholder="Bạn cần tìm gì ?" 
-                    //  onSearch={onSearch} 
-                     enterButton />
+                     onChange={onSearch} 
+                      />
    
                 </Col>
                 <Col span={6} style={{display:'flex',gap:'54px',padding:'0 10px'}}>
@@ -108,8 +139,8 @@ const HeaderComponent=()=>{
                         </div>
                         {user?.name?(
                           <>
-                           <Popover content={content}  trigger="click">
-                           <div style={{cursor:'pointer'}}>{username}</div>
+                          <Popover content={content} trigger="click" open={isOpenPopup}>
+                            <div style={{ cursor: 'pointer',maxWidth: 100, overflow: 'hidden', textOverflow: 'ellipsis' }} onClick={() => setIsOpenPopup((prev) => !prev)}>{userName?.length ? userName : user?.email}</div>
                           </Popover>
                           </>
                        
@@ -125,11 +156,11 @@ const HeaderComponent=()=>{
                       </div>
                         )}
                     </WrapperHeaderAccount>
-                <div>
-                <Badge count={4} size="small" >
-                < ShoppingCartOutlined style={{ fontSize: '30px',color:'#fff' }}/>
+                <div style={{display:'flex', alignItems:'center'}}>
+                <Badge count={order?.orderItems?.length} size="small" >
+                < ShoppingCartOutlined style={{ fontSize: '30px',color:'#fff',cursor:'pointer' }} onClick={()=>navigate('/order')} />
                 </Badge>
-                <WrapperTextHeaderSmall >Giỏ hàng</WrapperTextHeaderSmall>
+                <WrapperTextHeaderSmall>Giỏ hàng</WrapperTextHeaderSmall>
                 </div>
                 </Col>
              </WrapperHeader>
