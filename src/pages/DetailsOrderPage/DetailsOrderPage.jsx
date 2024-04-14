@@ -29,7 +29,7 @@ const DetailsOrderPage = () => {
 
   const queryOrder = useQuery({ queryKey: ['orders-details'], queryFn: fetchDetailsOrder })
   const { isLoading, data } = queryOrder
-  console.log(data);
+ 
   const priceMemo = useMemo(() => {
     const result = data?.orderItems?.reduce((total, cur) => {
       return total + ((cur.price * cur.amount))

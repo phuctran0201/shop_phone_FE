@@ -15,7 +15,9 @@ import { useDispatch, useSelector } from "react-redux";
 import {  useNavigate } from "react-router";
 import SignInComponent from "../SignInComponent/SignInComponent";
 import { addOrderProduct, resetOrder } from "../../redux/slices/orderSlide";
-import { convertPrice } from "../../Ultis";
+import { convertPrice, initFacebookSDK } from "../../Ultis";
+import LikeButtonComponent from "../LikeButtonComponent/LikeButtonComponent";
+import CommentComponent from "../CommentComponent/ComentComponent";
   
 const ProductDetailsComponent=({idProduct})=>{
     const navigate=useNavigate();
@@ -82,6 +84,9 @@ const ProductDetailsComponent=({idProduct})=>{
             }
         }
       }
+      useEffect(() => {
+        initFacebookSDK()
+    }, [])
       
       useEffect(() => {
         const orderRedux = order?.orderItems?.find((item) => item?.product === productDetails?.id) 
@@ -137,8 +142,13 @@ const ProductDetailsComponent=({idProduct})=>{
                 
                     <span className="changeAddress" >Đổi</span>
                 </WrapperAddressProduct>
-
-                <div>
+                <LikeButtonComponent
+                     dataHref={ process.env.REACT_APP_IS_LOCAL 
+                        ? "https://developers.facebook.com/docs/plugins/" 
+                        : window.location.href
+                    } 
+                    />
+                <div  style={{ margin: '10px 0 20px', padding: '10px 0', borderTop: '1px solid #e5e5e5', borderBottom: '1px solid #e5e5e5' }}>
                     <div>Số lượng</div>
                     <WrapperQualityProduct>
                     <WrapperBtnQualityProduct>
@@ -172,6 +182,13 @@ const ProductDetailsComponent=({idProduct})=>{
                 </div>
                 {errorLimitOrder && <div style={{color: 'red'}}>Sản phẩm đã hết hàng</div>}
             </Col>
+            <CommentComponent 
+                   dataHref={process.env.REACT_APP_IS_LOCAL 
+                    ? "https://developers.facebook.com/docs/plugins/comments#configurator"
+                    : window.location.href
+                } 
+                    width="1270" 
+                />
             </Row>
             <div>
        

@@ -182,7 +182,7 @@ const AdminUser =()=>{
                 else{
                     message.error(response.body.message)
                 }
-               console.log(response);
+              
             } else {
                 console.error("Access token not found or invalid.");
             }
@@ -220,7 +220,7 @@ const AdminUser =()=>{
             if (storageData && isJsonString(storageData)) {
                 storageData = JSON.parse(storageData);
         const res=await UserService.getDetailsUser(rowSelected,storageData);
-        console.log(res);
+        
         if (res?.body) {
             setStateUserDetails({
               name:  res?.body.name,
@@ -329,7 +329,7 @@ const AdminUser =()=>{
       }, [formDrawer, stateUserDetails, isModalOpen])
       
     const handleDetailsProduct=()=>{
-       console.log(rowSelected);
+       
         setIsOpenDrawer(true);
       }
     const renderAction=()=>{

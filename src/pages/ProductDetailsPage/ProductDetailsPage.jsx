@@ -8,7 +8,7 @@ const ProductDetailsPage=()=>{
     const {id}=useParams();
     const navigate=useNavigate();
     return(
-        <div style={{padding:'0 120px', background:'#efefef', height:'1000px'}}>
+        <div style={{padding:'0 120px', background:'#efefef', height:'100%'}}>
             <h5 style={{marginTop:'0',paddingTop:'10px'}}><span style={{ cursor:"pointer"}} onClick={()=>navigate("/")}>Trang chủ </span><RightOutlined /> Chi tiết sản phẩm</h5>
             <ProductDetailsComponent idProduct={id}/>
         </div>

@@ -27,7 +27,7 @@ const MyOrder=()=>{
     setSelectedOrder(order);
     setIsModalOpen(true);
   };
-  console.log(selectedOrder);
+ 
   const mutationCancel = useMutationHooks(
     async (data) => {
         const {  accessToken, ...rests } = data;
@@ -47,7 +47,7 @@ const MyOrder=()=>{
         let storageData = localStorage.getItem('accessToken');
     if (storageData && isJsonString(storageData)) {
         storageData = JSON.parse(storageData);
-       console.log(storageData);
+       
         const response = await mutationCancel.mutateAsync({accessToken:storageData,id:order?.id, orderItems: order?.orderItems,user: user?.id })
         if(response.statusCode==="OK"){
             message.success();
@@ -76,7 +76,7 @@ const MyOrder=()=>{
   }
   const queryOrder = useQuery({ queryKey: ['orders'], queryFn: fetchMyOrder })
   const { isLoading, data } = queryOrder
-  console.log(data);
+  
   const renderProduct = (data) => {
     return data?.map((order) => {
       return <WrapperHeaderItem key={order?.id}> 
@@ -125,9 +125,9 @@ const MyOrder=()=>{
           <h4>Đơn hàng của tôi</h4>
           {data && data.length > 0 ? (
           <WrapperListOrder >
-            {data.map((order) => {
+            {data.map((order,index) => {
               return (
-                <WrapperItemOrder key={order?.id}>
+                <WrapperItemOrder key={index}>
                   <WrapperStatus>
                     <span style={{fontSize: '14px', fontWeight: 'bold'}}>Trạng thái</span>
                     <div>
@@ -136,7 +136,7 @@ const MyOrder=()=>{
                     </div>
                     <div>
                       <span style={{color: 'rgb(255, 66, 78)'}}>Thanh toán: </span>
-                      {console.log(order)}
+                    
                       <span style={{color: 'rgb(90, 32, 193)', fontWeight: 'bold'}}>{`${order?.isPaid ? 'Đã thanh toán': 'Chưa thanh toán'}`}</span>
                     </div>
                   </WrapperStatus>

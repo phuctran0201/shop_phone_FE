@@ -187,7 +187,7 @@ const OrderPage = () => {
               else{
                   message.error(response.body.message)
               }
-             console.log(response);
+             
           } else {
               console.error("Access token not found or invalid.");
           }

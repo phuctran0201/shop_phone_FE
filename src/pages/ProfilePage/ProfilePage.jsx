@@ -46,7 +46,7 @@ const handleGetDetailsUser=async (id,token)=>{
     const res=await UserService.getDetailsUser(id,token);
     dispatch(updateUser({ ...res?.body,accessToken:token}))
 }
-console.log(user);
+
     useEffect(() => {
         setEmail(user?.email);
         setName(user?.name);
@@ -88,7 +88,6 @@ console.log(user);
                 storageData = JSON.parse(storageData);
                 decoded = jwtDecode(storageData);
             const id = decoded?.id;
-            console.log(id);
             handleGetDetailsUser(id,storageData);
             if (decoded?.id) {
                 try {

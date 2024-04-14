@@ -3,18 +3,19 @@ import {
     AppstoreOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
-
+    ShoppingCartOutlined,
     UserOutlined
   } from '@ant-design/icons'
 import React, { useState } from "react";
 import { getItem } from "../../Ultis";
 import AdminUser from "../../components/AdminUser/AdminUser";
 import AdminProduct from "../../components/AdminProduct/AdminProduct";
-
+import AdminOrder from "../../components/AdminOrder/AdminOrder";
  
   const items = [
     getItem('Người dùng', 'user', <UserOutlined />),
     getItem('Sản phẩm', 'product', <AppstoreOutlined />),
+    getItem('Đơn hàng', 'orders', <ShoppingCartOutlined />),
   ];
 
   
@@ -32,6 +33,10 @@ const AdminPage =()=>{
                  return(
                     <AdminProduct/>
                  )
+              case "orders":
+              return(
+                  <AdminOrder/>
+              )
             default:
                 return <></>
         }
@@ -47,7 +52,7 @@ const handleOnClick=({key})=>{
     return(
         <div
         style={{
-          width: "100%",display:"flex",margin:"20px",
+          display:"flex",margin:"20px",
           height: '100vh'
         }}
       >
@@ -61,7 +66,7 @@ const handleOnClick=({key})=>{
         >
           {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
         </Button>
-        <Menu style={{width:'400px'}}
+        <Menu style={{width:'380px'}}
           defaultSelectedKeys={['1']}
           mode="inline"
           inlineCollapsed={collapsed}

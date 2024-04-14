@@ -335,7 +335,7 @@ const AdminProduct =()=>{
       } catch (error) {
           console.error("Error occurred during mutation:", error);
       }
-      console.log(ids);
+    ;
   }
 
     useEffect(() => {

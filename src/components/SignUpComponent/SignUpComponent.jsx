@@ -66,7 +66,7 @@ const SignUpComponent = ({ visible, onCancel }) => {
         });
       
       
-        console.log("sigin-up",name,email,password,confirmPassword);
+        
         }
     const handleModalClose = () => {
         // Lưu trữ dữ liệu trước khi đóng modal

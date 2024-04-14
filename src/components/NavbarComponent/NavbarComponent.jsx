@@ -3,7 +3,7 @@ import { WrapperContent, WrapperLableText, WrapperTextValue } from "./style";
 import { Checkbox ,Rate } from 'antd';
 
 const onChange = (checkedValues) => {
-    console.log('checked = ', checkedValues);
+    
 };
 
 const NavbarComponent = () => {

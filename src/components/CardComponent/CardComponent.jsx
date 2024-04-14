@@ -19,7 +19,7 @@ const CardComponent=(props)=>{
         <div>
         <WrapperCardStyle
         hoverable
-        disabled={countInStock===0}
+        
         style={{
             width: "240px",
           

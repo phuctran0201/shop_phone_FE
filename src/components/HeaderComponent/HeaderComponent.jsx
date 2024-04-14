@@ -73,7 +73,7 @@ const HeaderComponent=()=>{
         }
       }
     }
-    console.log(user);
+    
    
     const content = (
       <div>

@@ -38,16 +38,29 @@ export const cancelOrder= async (accessToken,data)=>{
     );
     return res.data;
     }
-    export const getDetailsOrder = async (accessToken,id)=>{
-        const res= await axiosJWT.get(`${process.env.REACT_APP_API_URL}/orders/getDetailsOrder/${id}`
-        , 
-            {
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
+export const getDetailsOrder = async (accessToken,id)=>{
+    const res= await axiosJWT.get(`${process.env.REACT_APP_API_URL}/orders/getDetailsOrder/${id}`
+    , 
+        {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             }
-        );
-        return res.data;
         }
+    );
+    return res.data;
+    }
+export const getAllOrder = async (accessToken)=>{
+    const res= await axiosJWT.get(`${process.env.REACT_APP_API_URL}/orders`
+    , 
+        {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }
+    );
+    return res.data;
+    }

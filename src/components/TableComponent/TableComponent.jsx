@@ -20,7 +20,7 @@ const TableComponent =(props)=>{
       const rowSelection = {
         onChange: (selectedRowKeys, selectedRows) => {
           setRowSelectedKeys(selectedRowKeys)
-          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+          
         },
         // getCheckboxProps: (record) => ({
         //   disabled: record.name === 'Disabled User',
@@ -43,7 +43,7 @@ const TableComponent =(props)=>{
           .saveAs("Excel.xlsx");
       };
     return(
-        <div>
+        <div >
        
        {!!rowSelectedKeys.length && (
         <div style={{

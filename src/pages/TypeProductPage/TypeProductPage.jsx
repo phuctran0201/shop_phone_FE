@@ -30,7 +30,7 @@ const TypeProductPage=()=>{
         setPanigate({...panigate, total: res?.body.totalPage});
         setIsLoading(true)
       }
-      console.log(res);
+     
     }
 
     useEffect(() => {
