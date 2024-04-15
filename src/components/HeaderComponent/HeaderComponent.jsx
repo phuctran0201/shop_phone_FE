@@ -17,6 +17,7 @@ import { resetUser } from "../../redux/slices/userSlide";
 import LoadingComponent from "../LoadingComponent/LoadingComponent"
 import { useNavigate } from "react-router";
 import { resetSearch, searchProduct } from "../../redux/slices/productSlide";
+import { removeAllOrderProduct } from "../../redux/slices/orderSlide";
 
 const HeaderComponent=()=>{
     const navigate=useNavigate();
@@ -66,6 +67,12 @@ const HeaderComponent=()=>{
         if(decoded?.id){
           setIsLoading(true)
           await UserService.logOutUser(storageData);
+          const arrayOrdered = []
+          order?.orderItems?.forEach(element => {
+            arrayOrdered.push(element.product)
+          });
+          setIsLoading(true)
+          dispatch(removeAllOrderProduct({listChecked: arrayOrdered}))
           localStorage.clear();
           dispatch(resetUser());
           setIsLoading(true);
